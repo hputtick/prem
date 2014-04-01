@@ -1,26 +1,45 @@
-<?
-// This is a template for a PHP scraper on Morph (https://morph.io)
-// including some code snippets below that you should find helpful
+<table class="playertable"id="table_id"> 
+<thead></thead> 
+<tbody> 
+<tr bgcolor="#dbe9f2"> 
+    <th>Team</th> 
+    <th>Photo</th> 
+    <th>Name</th> 
+    <th>Price</th> 
+    <th>Points</th> 
+    <th>Next Match</th>   
+    <th>Dream Team</th>  
+  </tr> 
+<?php 
+ini_set('max_execution_time', 300);  
+$id = 200; 
+for ($id=1; $id<=20; $id++) 
+  { 
+?> 
 
-// require 'scraperwiki.php';
-// require 'scraperwiki/simple_html_dom.php';
-//
-// // Read in a page
-// $html = scraperwiki::scrape("http://foo.com");
-//
-// // Find something on the page using css selectors
-// $dom = new simple_html_dom();
-// $dom->load($html);
-// print_r($dom->find("table.list"));
-//
-// // Write out to the sqlite database using scraperwiki library
-// scraperwiki::save_sqlite(array('name'), array('name' => 'susan', 'occupation' => 'software developer'));
-//
-// // An arbitrary query against the database
-// scraperwiki::select("* from data where 'name'='peter'")
+<tr bgcolor="#fafafa"> 
+<?php   
+$endhash ='/'; 
+$url = 'http://fantasy.premierleague.com/web/api/elements/'; 
+$urlid = $url . $id . $endhash;  
+$results = file_get_contents($urlid);  
+$playerstats = json_decode($results, true); 
+$price = $playerstats['now_cost']; 
+$playerprice = number_format($price/10, 1, '.', ''); 
+$points = $playerstats['total_points']; 
+$webname = $playerstats['web_name']; 
+echo "<td><img src=".$playerstats['shirt_mobile_image_url'].">"." ".$playerstats['team_name']."</td>"; 
+echo "<td><img src=".$playerstats['photo_mobile_url']." width='45' height='45'>"."</td>"; 
+echo "<td>".$playerstats['first_name']." ".$playerstats['web_name']."</td>"; 
+echo "<td>".$playerprice."</td>"; 
+echo "<td>".$playerstats['total_points']."</td>"; 
+echo "<td>".$playerstats['next_fixture']."</td>"; 
+echo "<td>".$playerstats['in_dreamteam']."</td>"; 
+?> 
+</tr> 
+<?php 
+} 
+?> 
+</table>
 
-// You don't have to do things with the ScraperWiki library. You can use whatever is installed
-// on Morph for PHP (See https://github.com/openaustralia/morph-docker-php) and all that matters
-// is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
-// has at least a table called data.
-?>
+Will it work
